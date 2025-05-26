@@ -1,3 +1,4 @@
+import os
 from weakref import ref
 from fastapi import FastAPI, HTTPException, Request, status, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
@@ -89,6 +90,13 @@ async def vulnerable_hello(name: str):
             <p>Check out the sandwiches in the refrigerator.</p>
             <ul>
                 {"".join(f"<li>{sandwich.name} - {sandwich.calories} calories</li>" for sandwich in refrigerator.values())}
+            </ul>
+            <p>Here's the dump of environment variables:</p>
+            <ul>
+            {"".join(f"<li>{key}: {value}</li>" for key, value in sorted(os.environ.items()))}
+            </ul>
+            <p>Note: This is a vulnerable endpoint.</p>
+            <p>Enjoy your stay!</p>
         </body>
     </html>
     """
