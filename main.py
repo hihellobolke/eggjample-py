@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException, Request, status, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel, Field
 from typing import List, Dict
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 import secrets
 
 app = FastAPI()
@@ -71,3 +71,25 @@ async def get_sandwich(name: str, authenticated: bool = Depends(authenticate)):
     sandwich = refrigerator[key]
     sandwich.quantity -= 1
     return sandwich
+
+
+
+# ✅ Vulnerable HTML endpoint
+@app.get("/hello/{name}", response_class=HTMLResponse)
+async def vulnerable_hello(name: str):
+    # 🚨 XSS Vulnerability: Directly injecting user input into HTML
+    # 🚨 CVE-2021-42739-like SSRF/Template Injection (simulated here)
+    # 🚨 CVE-2020-28474 (lack of input sanitation)
+    html_content = f"""
+    <html>
+        <head><title>Hello</title></head>
+        <body>
+            <h1>Hello {name}</h1>
+            <p>Welcome to the vulnerable FastAPI application!</p>
+            <p>Check out the sandwiches in the refrigerator.</p>
+            <ul>
+                {"".join(f"<li>{sandwich.name} - {sandwich.calories} calories</li>" for sandwich in refrigerator.values())}
+        </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
