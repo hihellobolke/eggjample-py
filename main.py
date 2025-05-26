@@ -82,7 +82,7 @@ async def vulnerable_hello(name: str):
     # 🚨 CVE-2020-28474 (lack of input sanitation)
     html_content = f"""
     <html>
-        <head><title>Hello</title></head>
+        <head><title>Welcome {name}</title></head>
         <body>
             <h1>Hello {name}</h1>
             <p>Welcome to the vulnerable FastAPI application!</p>
