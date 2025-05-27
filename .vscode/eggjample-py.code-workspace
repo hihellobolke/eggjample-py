@@ -7,7 +7,9 @@
 	"settings": {},
 	"extensions": {
 		"recommendations": [
-			"genaiscript.genaiscript-vscode"
+			"genaiscript.genaiscript-vscode",
+			"github.copilot-chat",
+			"github.copilot"
 		]
 	}
 }
