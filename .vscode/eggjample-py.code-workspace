@@ -4,5 +4,12 @@
 			"path": ".."
 		}
 	],
-	"settings": {}
+	"settings": {},
+	"extensions": {
+		"recommendations": [
+			"genaiscript.genaiscript-vscode",
+			"github.copilot-chat",
+			"github.copilot"
+		]
+	}
 }
