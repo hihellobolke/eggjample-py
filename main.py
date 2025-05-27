@@ -73,31 +73,3 @@ async def get_sandwich(name: str, authenticated: bool = Depends(authenticate)):
     sandwich.quantity -= 1
     return sandwich
 
-
-
-# ✅ Vulnerable HTML endpoint
-@app.get("/hello/{name}", response_class=HTMLResponse)
-async def vulnerable_hello(name: str):
-    # 🚨 XSS Vulnerability: Directly injecting user input into HTML
-    # 🚨 CVE-2021-42739-like SSRF/Template Injection (simulated here)
-    # 🚨 CVE-2020-28474 (lack of input sanitation)
-    html_content = f"""
-    <html>
-        <head><title>Welcome {name}</title></head>
-        <body>
-            <h1>Hello {name}</h1>
-            <p>Welcome to the vulnerable FastAPI application!</p>
-            <p>Check out the sandwiches in the refrigerator.</p>
-            <ul>
-                {"".join(f"<li>{sandwich.name} - {sandwich.calories} calories</li>" for sandwich in refrigerator.values())}
-            </ul>
-            <p>Here's the dump of environment variables:</p>
-            <ul>
-            {"".join(f"<li>{key}: {value}</li>" for key, value in sorted(os.environ.items()))}
-            </ul>
-            <p>Note: This is a vulnerable endpoint.</p>
-            <p>Enjoy your stay!</p>
-        </body>
-    </html>
-    """
-    return HTMLResponse(content=html_content)
